@@ -1,1 +1,8 @@
-[]
+[
+    {
+        "name": "Ammar",
+        "email": "ammarjamshed123@gmail.com",
+        "password": "Ammarjamshed",
+        "is_admin": 0
+    }
+]
