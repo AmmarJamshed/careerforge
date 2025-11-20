@@ -2,5 +2,5 @@ streamlit
 requests
 pdf2image
 pytesseract
+pypdf
 Pillow
-python-dotenv
