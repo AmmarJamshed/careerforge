@@ -1,0 +1,28 @@
+{
+    "Pakistan": [
+        "NUST",
+        "GIKI",
+        "FAST",
+        "LUMS",
+        "IBA"
+    ],
+    "UK": [
+        "Manchester",
+        "Leeds",
+        "Birmingham"
+    ],
+    "USA": [
+        "Harvard",
+        "MIT",
+        "Stanford",
+        "NYU"
+    ],
+    "Germany": [
+        "TU Munich",
+        "RWTH Aachen"
+    ],
+    "Turkey": [
+        "METU",
+        "Koc University"
+    ]
+}
