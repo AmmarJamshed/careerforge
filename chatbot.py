@@ -1,9 +1,37 @@
 import streamlit as st
+from groq import Groq
+
+# Load Groq key from Streamlit Secrets
+GROQ_KEY = st.secrets["GROQ_API_KEY"]
 
 def ai_chatbot():
-    st.title("🤖 AI Chatbot")
+    st.title("🤖 CareerForge AI Chatbot (Groq Powered)")
 
-    query = st.text_area("Ask anything about admissions, scholarships or careers:")
+    st.write("Ask anything about careers, skills, universities, scholarships, or admissions.")
 
-    if st.button("Ask"):
-        st.write("AI Response: (placeholder)")  # Replace with Groq or OpenAI API
+    user_input = st.text_area("Your question:")
+
+    if st.button("Ask AI"):
+        if not user_input.strip():
+            st.warning("Please enter a question.")
+            return
+
+        try:
+            client = Groq(api_key=GROQ_KEY)
+
+            response = client.chat.completions.create(
+                model="llama-3.1-8b-instant",
+                messages=[
+                    {"role": "system", "content": "You are CareerForge AI — an expert advisor for careers, universities, scholarships, and skill development."},
+                    {"role": "user", "content": user_input}
+                ],
+                temperature=0.4,
+                max_tokens=600
+            )
+
+            ai_reply = response.choices[0].message.content
+            st.success("AI Response:")
+            st.write(ai_reply)
+
+        except Exception as e:
+            st.error(f"Groq API error: {e}")
