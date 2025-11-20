@@ -3,34 +3,59 @@ import json
 import requests
 import streamlit as st
 
-GITHUB_REPO = "YOUR_USERNAME/careerforge-data"  # Change this
+# Correct GitHub repo
+GITHUB_REPO = "AmmarJamshed/careerforge"
+GITHUB_DATA_FOLDER = "data"
+
+# Load GitHub Token
 GITHUB_TOKEN = st.secrets["GITHUB_TOKEN"]
 
-def github_get(path):
-    url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{path}"
+def github_get(filename):
+    """
+    Reads a JSON file from GitHub inside /data folder.
+    """
+    url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{GITHUB_DATA_FOLDER}/{filename}"
 
-    r = requests.get(url, headers={
-        "Authorization": f"token {GITHUB_TOKEN}"
-    })
+    response = requests.get(
+        url,
+        headers={"Authorization": f"token {GITHUB_TOKEN}"}
+    )
 
-    data = r.json()
+    data = response.json()
+
+    # If GitHub returns error (e.g. Not Found), handle it gracefully
+    if "content" not in data:
+        raise ValueError(
+            f"GitHub GET failed for {filename}. Response was: {data}"
+        )
+
     content = base64.b64decode(data["content"]).decode()
     return json.loads(content), data["sha"]
 
 
-def github_update(path, new_data, sha):
-    url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{path}"
+def github_update(filename, new_data, sha):
+    """
+    Writes JSON back to GitHub inside /data folder.
+    """
+    url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{GITHUB_DATA_FOLDER}/{filename}"
 
     encoded = base64.b64encode(
         json.dumps(new_data, indent=4).encode()
     ).decode()
 
-    r = requests.put(url, json={
-        "message": f"update {path}",
-        "content": encoded,
-        "sha": sha
-    }, headers={
-        "Authorization": f"token {GITHUB_TOKEN}"
-    })
+    response = requests.put(
+        url,
+        json={
+            "message": f"Updated {filename}",
+            "content": encoded,
+            "sha": sha
+        },
+        headers={"Authorization": f"token {GITHUB_TOKEN}"}
+    )
 
-    return r.status_code in [200, 201]
+    if response.status_code not in [200, 201]:
+        raise ValueError(
+            f"GitHub UPDATE failed for {filename}. Response was: {response.json()}"
+        )
+
+    return True
