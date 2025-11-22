@@ -4,5 +4,11 @@
         "email": "ammarjamshed123@gmail.com",
         "password": "Ammarjamshed",
         "is_admin": 0
+    },
+    {
+        "name": "Ammar Jamshed",
+        "email": "ammarjamshed97@gmail.com",
+        "password": "Icedragon123",
+        "is_admin": 0
     }
 ]
